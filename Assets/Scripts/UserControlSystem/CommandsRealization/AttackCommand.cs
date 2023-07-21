@@ -1,10 +1,8 @@
-﻿using Abstractions.Commands;
-using Abstractions.Commands.CommandsInterfaces;
+﻿using Abstractions.Commands.CommandsInterfaces;
 
-public sealed class AttackCommand : CommandExecutorBase<IAttackCommand>
+public sealed class AttackCommand : IAttackCommand
 {
-    public override void ExecuteSpecificCommand(IAttackCommand command)
-    {
-        UnityEngine.Debug.Log("Attack");
-    }
+    public IAttackable Target { get; }
+
+    public AttackCommand(IAttackable target) => Target = target;
 }

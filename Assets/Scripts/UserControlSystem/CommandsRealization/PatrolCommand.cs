@@ -1,14 +1,17 @@
-﻿using Abstractions.Commands;
-using Abstractions.Commands.CommandsInterfaces;
+﻿using Abstractions.Commands.CommandsInterfaces;
 using UnityEngine;
 
 namespace UserControlSystem.CommandsRealization
 {
-    public sealed class PatrolCommand : CommandExecutorBase<IPatrolCommand>
+    public sealed class PatrolCommand : IPatrolCommand
     {
-        public override void ExecuteSpecificCommand(IPatrolCommand command)
+        public Vector3 From { get; }
+        public Vector3 To { get; }
+
+        public PatrolCommand(Vector3 @from, Vector3 to)
         {
-            UnityEngine.Debug.Log("Patrol");
+            From = @from;
+            To = to;
         }
     }
 }
