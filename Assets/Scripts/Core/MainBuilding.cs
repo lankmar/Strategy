@@ -21,17 +21,4 @@ public sealed class MainBuilding : CommandExecutorBase<IProduceUnitCommand>, ISe
             new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)), 
             Quaternion.identity, 
             _unitsParent);
-
-
-/// <summary>
-/// 
-/// </summary>
-    [SerializeField] private Transform _unitPrefab;
-    public void ProduceUnit()
-    {
-        Instantiate(_unitPrefab,
-            new Vector3(Random.Range(10, 10), 0, Random.Range(10, 10)),
-            Quaternion.identity);
-    
-    }
 }
