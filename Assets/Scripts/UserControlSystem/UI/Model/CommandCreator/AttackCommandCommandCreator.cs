@@ -1,13 +1,9 @@
-﻿using System;
-using Abstractions.Commands.CommandsInterfaces;
+﻿using Abstractions.Commands.CommandsInterfaces;
 
 namespace UserControlSystem
 {
-    public sealed class AttackCommandCommandCreator : CommandCreatorBase<IAttackCommand>
+    public sealed class AttackCommandCommandCreator : CancellableCommandCreatorBase<IAttackCommand, IAttackable>
     {
-        protected override void ClassSpecificCommandCreation(Action<IAttackCommand> creationCallback)
-        {
-            
-        }
+        protected override IAttackCommand CreateCommand(IAttackable argument) => new AttackCommand(argument);
     }
 }
