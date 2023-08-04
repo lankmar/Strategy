@@ -7,12 +7,14 @@ public sealed class MainBuilding : CommandExecutorBase<IProduceUnitCommand>, ISe
 {
     public float Health => _health;
     public float MaxHealth => _maxHealth;
+    public Transform PivotPoint => _pivotPoint;
     public Sprite Icon => _icon;
 
     [SerializeField] private Transform _unitsParent;
 
     [SerializeField] private float _maxHealth = 1000;
     [SerializeField] private Sprite _icon;
+    [SerializeField] private Transform _pivotPoint;
 
     private float _health = 1000;
 
@@ -21,17 +23,4 @@ public sealed class MainBuilding : CommandExecutorBase<IProduceUnitCommand>, ISe
             new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)), 
             Quaternion.identity, 
             _unitsParent);
-
-
-/// <summary>
-/// 
-/// </summary>
-    [SerializeField] private Transform _unitPrefab;
-    public void ProduceUnit()
-    {
-        Instantiate(_unitPrefab,
-            new Vector3(Random.Range(10, 10), 0, Random.Range(10, 10)),
-            Quaternion.identity);
-    
-    }
 }
