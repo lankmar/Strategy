@@ -14,6 +14,7 @@ namespace UserControlSystem
         public event Action OnCommandCancel;
 
         [Inject] private CommandCreatorBase<IProduceUnitCommand> _unitProducer;
+        [Inject] private CommandCreatorBase<IProduceUnitThrowerCommand> _unitThrowerProducer;
         [Inject] private CommandCreatorBase<IAttackCommand> _attacker;
         [Inject] private CommandCreatorBase<IStopCommand> _stopper;
         [Inject] private CommandCreatorBase<IMoveCommand> _mover;
@@ -32,6 +33,7 @@ namespace UserControlSystem
             OnCommandAccepted?.Invoke(commandExecutor);
 
             _unitProducer.ProcessCommandExecutor(commandExecutor, command => ExecuteCommandWrapper(command, commandsQueue));
+            _unitThrowerProducer.ProcessCommandExecutor(commandExecutor, command => ExecuteCommandWrapper(command, commandsQueue));
             _attacker.ProcessCommandExecutor(commandExecutor, command => ExecuteCommandWrapper(command, commandsQueue));
             _stopper.ProcessCommandExecutor(commandExecutor, command => ExecuteCommandWrapper(command, commandsQueue));
             _mover.ProcessCommandExecutor(commandExecutor, command => ExecuteCommandWrapper(command, commandsQueue));
@@ -59,6 +61,7 @@ namespace UserControlSystem
         private void processOnCancel()
         {
             _unitProducer.ProcessCancel();
+            _unitThrowerProducer.ProcessCancel();
             _attacker.ProcessCancel();
             _stopper.ProcessCancel();
             _mover.ProcessCancel();

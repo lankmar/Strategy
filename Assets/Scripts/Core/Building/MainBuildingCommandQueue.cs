@@ -11,6 +11,7 @@ namespace Core
         public ICommand CurrentCommand => default;
         
         [Inject] CommandExecutorBase<IProduceUnitCommand> _produceUnitCommandExecutor;
+        [Inject] CommandExecutorBase<IProduceUnitThrowerCommand> _produceUnitThrowerCommand;
         [Inject] CommandExecutorBase<ISetRallyPointCommand> _setRallyCommandExecutor;
 
         public void Clear() { }
@@ -18,6 +19,7 @@ namespace Core
         public async void EnqueueCommand(object command)
         {
             await _produceUnitCommandExecutor.TryExecuteCommand(command);
+            await _produceUnitThrowerCommand.TryExecuteCommand(command);
             await _setRallyCommandExecutor.TryExecuteCommand(command);
         }
     }
