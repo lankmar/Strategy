@@ -67,5 +67,17 @@ namespace UserControlSystem
 
             OnCommandCancel?.Invoke();
         }
+
+        public void OnAutoCommandButtonClicked(ICommandExecutor commandExecutor, ICommandsQueue commandsQueue)
+        {
+            if (_commandIsPending)
+            {
+                processOnCancel();
+            }
+            _commandIsPending = true;
+            OnCommandAccepted?.Invoke(commandExecutor);
+            
+            _mover.ProcessCommandExecutor(commandExecutor, command => ExecuteCommandWrapper(command, commandsQueue));
+        }
     }
 }
