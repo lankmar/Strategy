@@ -20,7 +20,7 @@ namespace Core.CommandExecutors
 
         private ReactiveCollection<IUnitProductionTask> _queue = new ReactiveCollection<IUnitProductionTask>();
 
-        private void Update()
+        public void Update()
         {
             if (_queue.Count == 0)
             {
@@ -49,6 +49,8 @@ namespace Core.CommandExecutors
 
         public override async Task ExecuteSpecificCommand(IProduceUnitCommand command)
         {
+
+            Debug.Log("ExecuteSpecificCommand" + command);
             var instance = _diContainer.InstantiatePrefab(command.UnitPrefab, transform.position, Quaternion.identity, _unitsParent);
             var queue = instance.GetComponent<ICommandsQueue>();
             var mainBuilding = GetComponent<MainBuilding>();

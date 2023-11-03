@@ -26,7 +26,8 @@ namespace UserControlSystem
             Container.Bind<CommandCreatorBase<IStopCommand>>()
                 .To<StopCommandCommandCreator>().AsTransient();
             Container.Bind<CommandCreatorBase<ISetRallyPointCommand>>()
-                .To<SetRallyPointCommandCreator>().AsTransient();
+                .To<SetRallyPointCommandCreator>().AsTransient(); 
+           
 
             Container.Bind<CommandButtonsModel>().AsTransient();
             
