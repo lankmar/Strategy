@@ -3,27 +3,30 @@ using System.Collections.Generic;
 using Abstractions;
 using Abstractions.Commands;
 using Abstractions.Commands.CommandsInterfaces;
+using UniRx;
 using UnityEngine;
 using UserControlSystem.CommandsRealization;
 using UserControlSystem.UI.View;
 using Utils;
+using Zenject;
 
 namespace UserControlSystem.UI.Presenter
 {
     public sealed class CommandButtonsPresenter : MonoBehaviour
     {
-        [SerializeField] private SelectableValue _selectable;
         [SerializeField] private CommandButtonsView _view;
-        [SerializeField] private AssetsContext _context;
-
+        [Inject] private IObservable<ISelectable> _selectedValues;
+        [Inject] private CommandButtonsModel _model;
         private ISelectable _currentSelectable;
-
+        
         private void Start()
         {
-            _selectable.OnSelected += ONSelected;
-            ONSelected(_selectable.CurrentValue);
+            _view.OnClick += _model.OnCommandButtonClicked;
+            _model.OnCommandSent += _view.UnblockAllInteractions;
+            _model.OnCommandCancel += _view.UnblockAllInteractions;
+            _model.OnCommandAccepted += _view.BlockInteractions;
 
-            _view.OnClick += ONButtonClick;
+            _selectedValues.Subscribe(ONSelected);
         }
 
         private void ONSelected(ISelectable selectable)
@@ -32,6 +35,10 @@ namespace UserControlSystem.UI.Presenter
             {
                 return;
             }
+            if (_currentSelectable != null)
+            {
+                _model.OnSelectionChanged();
+            }
             _currentSelectable = selectable;
 
             _view.Clear();
@@ -39,20 +46,14 @@ namespace UserControlSystem.UI.Presenter
             {
                 var commandExecutors = new List<ICommandExecutor>();
                 commandExecutors.AddRange((selectable as Component).GetComponentsInParent<ICommandExecutor>());
-                _view.MakeLayout(commandExecutors);
+                var queue = (selectable as Component).GetComponentInParent<ICommandsQueue>();
+                _view.MakeLayout(commandExecutors, queue);
+                var isUnit = (selectable as Component).GetComponent<IUnit>();
+                if (isUnit != null)
+                {
+                    _model.OnAutoCommandButtonClicked((selectable as Component).GetComponentInParent<ICommandExecutor>(), queue);
+                }
             }
-        }
-
-        private void ONButtonClick(ICommandExecutor commandExecutor)
-        {
-            var unitProducer = commandExecutor as CommandExecutorBase<IProduceUnitCommand>;
-            if (unitProducer != null)
-            {
-                unitProducer.ExecuteSpecificCommand(_context.Inject(new ProduceUnitCommand()));
-                return;
-            }
-            throw new ApplicationException($"{nameof(CommandButtonsPresenter)}.{nameof(ONButtonClick)}: " +
-                                           $"Unknown type of commands executor: {commandExecutor.GetType().FullName}!");
         }
     }
 }
